@@ -1,5 +1,5 @@
 # 두개의 숫자열
-#테스트의 갯수 받아오기
+# 테스트의 갯수 받아오기
 test = int(input())
  
 for test_num in range(1,test+1):
