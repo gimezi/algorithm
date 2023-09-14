@@ -31,43 +31,83 @@
 그리디, 정렬
 '''
 
+import sys
+input = sys.stdin.readline
+
 N = int(input())
 crains = list(map(int,input().split()))
 M = int(input())
 boxes = list(map(int,input().split()))
 
-
 crains.sort(reverse=True)
 boxes.sort(reverse=True)
 
+if crains[0] < boxes[0]:
+    print(-1)
+    exit()
+
 cnt = 0
+while boxes:
+    for crain in crains:
+        for box in boxes:
+            # 박스 큰거부터 보면서 된다면,
+            if crain >= box:
+                boxes.remove(box)
+                break
+    cnt += 1
 
-# 비교 시작 위치
-p1 = 0  
-
-
-
-
-
-
-
-
-
+print(cnt)
 
 
+'''
+이 방법이 생각이 나긴했는데 
+당연히 시간초과일거같아서 안해봤다..
+구글링하니까 다 이렇게 풀고 pypy로 돌리더라
 
-
-
-
-
-
-
+일단 쉬운방법으로 해보고 안되면 다른 방법 찾아보자
+'''
 
 
 
 
 
 
+
+
+
+
+
+
+
+
+## 두번째 시도
+
+# def find(crain, box):
+#     if crain[0] < box[0]:
+#         return -1
+    
+#     cnt = 1
+#     i = 0
+#     j = 0
+#     while box:
+#         if crain[i] >= box[j]:
+#             box.pop(j)
+#             i += 1
+#         else:
+#             j += 1
+        
+#         if i == N:
+#             cnt += 1
+#             i = 0
+        
+#         if j == M:
+#             cnt += 1
+#             i = 0
+#             j = 0
+#     return cnt
+
+# result = find(crains, boxes)
+# print(result)
 
 
 
@@ -78,9 +118,9 @@ p1 = 0
 # 첫시도
 '''
 문제를 덜 생각해씀
-
+4
 4 3 2 1
-
+8
 4 4 3 3 2 2 1 1 
 이런 경우에는 각각 자기꺼 한개씩 들면 두번만에 끝나는디
 '''
