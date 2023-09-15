@@ -31,7 +31,8 @@ BFS
 '''
 
 from collections import deque
-from pprint import pprint
+import sys
+input = sys.stdin.readline
 
 # 가로, 세로
 M, N = map(int,input().split())
@@ -47,16 +48,26 @@ que = deque([])
 for i in range(N):
     for j in range(M):
         if MAP[i][j] == 1:
-            que.append((i, j))
+            que.append((i, j, 0))
             MAP[i][j] = 10  # 방문체크 -> 10으로 만들어주기
 
+# 단계를 담을 arr
+levels = []
+
 while que:
-    cy, cx = que.popleft()
-    print(cy, cx)
+    cy, cx, level = que.popleft()
     for dy, dx in dire:
         ny, nx = cy + dy, cx + dx
         if 0 <= ny < N and 0 <= nx < M:
             if MAP[ny][nx] == 0:
-                que.append((ny, nx))
+                que.append((ny, nx, level + 1))
                 MAP[ny][nx] = 10
-    pprint(MAP)
+    levels.append(level)
+
+# 맵에 0이 남아있다면 -1, 아니면 출력
+for row in MAP:
+    if 0 in row:
+        print(-1)
+        exit()
+
+print(max(levels))
