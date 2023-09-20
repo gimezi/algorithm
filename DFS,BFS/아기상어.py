@@ -30,50 +30,39 @@
 0 0 0
 0 9 0
 
-
 3
+
+print(f'좌표({cy}, {cx}), t = {t}, 상어크기 = {sharksize}, 물고기={fish} 누적시간 ={time}')
 '''
+
+
 from collections import deque
 
-dir = [(0, -1), (-1, 0), (1, 0), (0, 1)]    # 상 좌 우 하
+dir = [(-1, 0), (0, -1), (0, 1), (1, 0)]    # 상 좌 우 하
 N = int(input())
 ocean = [list(map(int,input().split())) for _ in range(N)]
+
+# 아기 상어 위치 찾기
 for i in range(N):
     for j in range(N):
         if ocean[i][j] == 9:
             sharky = i
             sharkx = j
 sharksize = 2
-fish = 0
-time = 0
+fish = 0    
+time = 0    # 총시간
+ocean[sharky][sharkx] = 0   # 초기 위치도 움직일 수 있으니까 0만들어주기
 
 def eat(y, x, t):  # 시작점, 시간
     global sharksize, fish, time
     que = deque([(y, x, t)])
     visited = [[0 for _ in range(N)] for _ in range(N)]
     visited[y][x] = 1
+    eatable = []
     while que:
         cy, cx, t = que.popleft()
-        print(cy, cx, t, sharksize)
-        if ocean[cy][cx]:
-            if ocean[cy][cx] < sharksize:
-                sharksize += 1
-                fish += 1
-                time += t
-                ocean[cy][cx] = 0
-                left = 0
-                for i in range(N):
-                    left += sum(ocean[i])
-                print(left, ocean, time, fish)
-                if left == 9:
-                    if fish:
-                        return time
-                    else:
-                        return 0
-                else:
-                    eat(cy, cx, t)
-                
-                break
+        if 0 < ocean[cy][cx] < sharksize:
+            eatable.append((t, cy, cx)) # 먹을 수 있는 물고기 리스트에 넣어주기
         for dy, dx in dir:
             ny = cy + dy
             nx = cx + dx
@@ -81,8 +70,89 @@ def eat(y, x, t):  # 시작점, 시간
                 if visited[ny][nx] == 0 and ocean[ny][nx] <= sharksize:
                     visited[ny][nx] = 1
                     que.append((ny, nx, t + 1))
+    distance = 99999    # 가장 가까운 물고기 구해주기
+    if eatable:
+        for dis, ay, ax in eatable:
+            if dis < distance:
+                nesty, nextx = ay, ax
+                distance = dis
+            elif dis == distance:
+                if nesty > ay:
+                    nesty, nextx = ay, ax
+                    distance = dis
+                elif nesty == ay:
+                    if nextx > ax:
+                        nesty, nextx = ay, ax
+                        distance = dis
+        fish += 1   # 물고기 먹어주고
+        if fish == sharksize:   # 만약 먹은 물고기 == 상어 크기라면
+            sharksize += 1      # 상어 크키 늘려주고
+            fish = 0            # 물고기 초기화
+        ocean[nesty][nextx] = 0 # 자리에 있는거 먹었으니까 자리는 비었음
+        time += distance
+        eat(nesty, nextx, 0)
+    else:   # 먹을게 없다면 종료
+        return 0  
+
+eat(sharky, sharkx, 0)
+print(time)
+
+
+'''
+물고기 우선순위 찾는게 힘들엇따..
+그냥 먹을 수 있는 물고기를 리스트에 담고
+가장 가까운거 -> 같으면 위에 있는거 -> 같으면 왼쪽에 있는거 if문으로 정해서 다시 돌리기
+'''
+
+
+
+# from collections import deque
+# import pprint
+
+# dir = [(-1, 0), (0, -1), (0, 1), (1, 0)]    # 상 좌 우 하
+# N = int(input())
+# ocean = [list(map(int,input().split())) for _ in range(N)]
+# for i in range(N):
+#     for j in range(N):
+#         if ocean[i][j] == 9:
+#             sharky = i
+#             sharkx = j
+# sharksize = 2
+# fish = 0
+# time = 0
+# ocean[sharky][sharkx] = 0
+
+# def eat(y, x, t):  # 시작점, 시간
+#     global sharksize, fish, time
+#     que = deque([(y, x, t)])
+#     visited = [[0 for _ in range(N)] for _ in range(N)]
+#     visited[y][x] = 1
+#     while que:
+#         cy, cx, t = que.popleft()
+#         print(f'좌표({cy}, {cx}), t = {t}, 상어크기 = {sharksize}, 물고기={fish} 누적시간 ={time}')
+#         if 0 < ocean[cy][cx] < sharksize:
+#             fish += 1
+#             if fish == sharksize:
+#                 fish = 0
+#                 sharksize += 1
+#             time += t
+#             ocean[cy][cx] = 0
+#             left = 0
+#             pprint.pprint(ocean)
+#             for i in range(N):
+#                 left += sum(ocean[i])
+#             if left == 0:
+#                 return time
+#             else:
+#                 return eat(cy, cx, 0)
+#         for dy, dx in dir:
+#             ny = cy + dy
+#             nx = cx + dx
+#             if 0 <= ny < N and 0 <= nx < N:
+#                 if visited[ny][nx] == 0 and ocean[ny][nx] <= sharksize:
+#                     visited[ny][nx] = 1
+#                     que.append((ny, nx, t + 1))
     
-
-        
-
-print(eat(sharky, sharkx, 0))
+# eat(sharky, sharkx, 0)
+# print(time)
+# print(ocean)
