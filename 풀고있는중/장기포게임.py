@@ -65,3 +65,53 @@ for tc in range(1, T + 1):
                 pan[i][j] = 0
 
     print(f'#{tc} {game(poy,pox)}')
+
+
+
+
+# answer code
+
+def search(dx, dy, lst, n):
+    global cnt
+    if n == 3:
+        return
+    else:
+        for k in range(4):
+            flag = 0
+            for l in range(1, N):
+                nx = dx + d[k][0] * l
+                ny = dy + d[k][1] * l
+                if flag > 1:
+                    break
+                if 0 <= nx < N and 0 <= ny < N:
+                    if lst[nx][ny] == 1:
+                        if flag == 1 and v[nx][ny] == 0:
+                            cnt += 1
+                            v[nx][ny] = 1
+                            lst[nx][ny] = 0
+                            search(nx, ny, lst, n+1)
+                            lst[nx][ny] = 1
+                        elif flag == 1 and v[nx][ny] == 1:
+                            lst[nx][ny] = 0
+                            search(nx, ny, lst, n + 1)
+                            lst[nx][ny] = 1
+                        flag += 1
+                    if lst[nx][ny] == 0 and flag == 1:
+                        search(nx, ny, lst, n+1)
+
+
+d = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+T = int(input())
+for t in range(T):
+    N = int(input())
+    MAP = [list(map(int, input().split())) for _ in range(N)]
+    for i in range(N):
+        for j in range(N):
+            if MAP[i][j] == 2:
+                x, y = i, j
+
+    MAP[x][y] = 0
+    v = [[0] * N for _ in range(N)]
+    cnt = 0
+    search(x, y, MAP, 0)
+    print(f'#{t+1}', cnt)
