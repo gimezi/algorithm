@@ -64,7 +64,6 @@ def BFS(start, end):
     return 
 
 for i in range(1, N + 1):
-   
     BFS(start, i)
 
 print(cnt)

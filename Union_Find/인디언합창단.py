@@ -30,7 +30,7 @@ for _ in range(int(input())):
     p1 = int(ord(p1)) - 65
     p2 = int(ord(p2)) - 65
     union(p1, p2)
-  
+
 for i in range(26):
     find(i)
 
