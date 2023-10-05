@@ -33,6 +33,17 @@ n(1 ≤ n ≤ 500)
 만약에 모든 칸에 대해서 BFS를 돌리면 무조건 시간 초과가 나겠지..?
 
 '''
+dire = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+def DFS(sy, sx):
+    stack = [(sy, sx, 0)]
+    visited = [[0 for _ in range(n)] for _ in range(n)]
+    visited[sy][sx] = 1
+
+    while stack:
+        cy, cx, level = stack.pop()
+        
+
 
 
 n = int(input())
