@@ -41,9 +41,8 @@ K는 한자리 정수이고, Q는 0자리 이상의 문자열이다.
 
 
 S = input()
-# 괄호 밖의 숫자
 stack = []
-
+cntarr = []
 
 for letter in S:
     if letter == '(':
