@@ -28,23 +28,31 @@ n(1 ≤ n ≤ 500)
 
 [output]
 4
-'''
-'''
-만약에 모든 칸에 대해서 BFS를 돌리면 무조건 시간 초과가 나겠지..?
+
+DFS, DP?
+
+먹는 양이 아니라 간 거리네
+현재 칸에서 갈 수있는 칸의 갯수, 상하 좌우 중 어디로 갈 수 있는지?
 
 '''
-dire = [(1, 0), (-1, 0), (0, 1), (0, -1)]
-
-def DFS(sy, sx):
-    stack = [(sy, sx, 0)]
-    visited = [[0 for _ in range(n)] for _ in range(n)]
-    visited[sy][sx] = 1
-
-    while stack:
-        cy, cx, level = stack.pop()
-        
-
-
+import pprint
+dire = [(-1, 0), (1, 0), (0, -1), (0, 1)]   # 상하좌우
 
 n = int(input())
 soop = [list(map(int,input().split())) for _ in range(n)]
+test =[[[0 for _ in range(5)] for _ in range(n)] for _ in range(n)]
+for i in range(n):
+    for j in range(n):
+        for k in range(4):
+            ny, nx = i + dire[k][0], j + dire[k][1]
+            if 0 <= ny < n and  0 <= nx < n:
+                if soop[i][j] > soop[ny][nx]:
+                    test[i][j][0] += 1
+                    test[i][j][k + 1] = 1
+
+'''
+[[[2, 0, 1, 0, 1], [0, 0, 0, 0, 0], [3, 0, 1, 1, 1], [1, 0, 1, 0, 0]],
+[[0, 0, 0, 0, 0], [3, 1, 0, 1, 1], [2, 0, 1, 0, 1], [0, 0, 0, 0, 0]],
+[[2, 1, 1, 0, 0], [4, 1, 1, 1, 1], [0, 0, 0, 0, 0], [3, 1, 1, 1, 0]],
+[[1, 0, 0, 0, 1], [0, 0, 0, 0, 0], [3, 1, 0, 1, 1], [0, 0, 0, 0, 0]]]
+'''
