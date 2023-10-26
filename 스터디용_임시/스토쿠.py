@@ -13,56 +13,57 @@ from pprint import pprint
 0 0 0 0 0 0 0 0 2
 0 0 0 0 0 0 0 0 1
 '''
-import copy
 
-centers = [[(1, 1), (1, 4), (1, 7)], [(4, 1), (4, 4), (4, 7)], [(7, 1), (7, 4), (7, 7)]]
+import sys
+input = sys.stdin.readline
+
+centers = [[(1, 1), (1, 4), (1, 7)], 
+            [(4, 1), (4, 4), (4, 7)], 
+            [(7, 1), (7, 4), (7, 7)]]
 dir = [(0, 0), (1, 1), (1, 0), (1, -1), (0, 1), (0, -1), (-1, 1), (-1, 0), (-1, -1)]
 
 # num가 arr의 y, x자리에 들어가도 되는지?
 def check(arr, y, x, num):
-    # 네모확인용 센터
-    center = centers[y // 3][x // 3]
+    # 가로, 세로, 네모 중에 하나라도 num이 있다면 바로 false
     # 가로
     if num in arr[y]:
         return False
     # 세로
-
     for k in range(9): 
         if arr[k][x] == num:
             return False
     # 네모
+    # 네모확인용 센터
+    center = centers[y // 3][x // 3]
     for dy, dx in dir:
         if arr[center[0] + dy][center[1] + dx] == num:
             return False
     return True
 
 
-def sudoku(arr, y, x, t):
-    if t == len(zeros) - 1:
-        return arr
-    #  만약 지금 넣으려고 하는 곳이 이미 채워졌다면
-    if arr[y][x] != 0:
-        return 
-
-    for i in range(1, 10):
-        if check(arr, y, x, i):
-            arr[y][x] = i
-            visited[y][x][i - 1] = 1
-            for ny, nx in zeros:
-                if visited[ny][nx][i - 1] == 0:
-                    sudoku(arr, ny, nx, t + 1)
+def sudoku(arr, idx):
+    # 다 채워졌다면
+    if idx == len(zeros):
+        for row in range(9):
+            print(*arr[row])
+        exit()
+    
+    y, x = zeros[idx][0], zeros[idx][1]
+    for num in range(1, 10):
+        if check(arr, y, x, num):   # 만약 이 칸에 들어갈 수 있는 숫자라면
+            arr[y][x] = num     # 넣어주고
+            # 다음친구
+            sudoku(arr, idx + 1)
             arr[y][x] = 0
-        
-     
+
 board = [list(map(int,input().split())) for _ in range(9)]
 zeros = []
 for i in range(9):
     for j in range(9):
         if board[i][j] == 0:
             zeros.append((i, j))
-visited = [[[0 for _ in range(9)] for _ in range(9)] for _ in range(9)]
-sudoku(board, zeros[0][0], zeros[0][1], 0)
 
+result = sudoku(board, 0)
 
 
 
